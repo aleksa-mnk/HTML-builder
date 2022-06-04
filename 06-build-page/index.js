@@ -53,13 +53,13 @@ const findTemplatesTags = async () => {
     const componentsPath = path.join(__dirname, 'components');
     const components = await fs.promises.readdir(componentsPath, { withFileTypes: true });
 
-    for (const file of components) {
+    await Promise.all(components.map(async file => {
         const filePath = path.join(componentsPath, file.name);
         if (file.isFile() && (path.extname(filePath) === '.html')) {
             const data = await fs.promises.readFile(filePath);
             result[file.name] = data.toString();
         }
-    }
+    }));
 
     return result;
 };
